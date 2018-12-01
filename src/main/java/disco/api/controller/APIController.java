@@ -1,14 +1,13 @@
 package disco.api.controller;
 
 import disco.api.externalapi.googleplace.GooglePlaceAPIService;
-import disco.api.externalapi.googleplace.GooglePlaceRestaurantGETResponse;
+import disco.api.externalapi.googleplace.GooglePlaceGETResponse;
 import disco.api.externalapi.instagram.InstagramAPIService;
 import disco.api.externalapi.instagram.InstagramGETResponse;
 import disco.api.externalapi.twitter.TwitterAPIService;
 import disco.api.externalapi.twitter.TwitterGETResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.social.twitter.api.Twitter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class APIController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value ="googleplacerestaurant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GooglePlaceRestaurantGETResponse> getGooglePlaceRestaurantResponseList(
+    public List<GooglePlaceGETResponse> getGooglePlaceRestaurantResponseList(
             @RequestParam("lat") Double lat,
             @RequestParam("lng") Double lng,
             @RequestParam("rad") Double rad) {
@@ -59,6 +58,19 @@ public class APIController {
                 rad
         );
         return googlePlaceAPIService.getAllRestaurantsLocation();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value ="googleplacesight", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<GooglePlaceGETResponse> getGooglePlaceSightResponseList(
+            @RequestParam("lat") Double lat,
+            @RequestParam("lng") Double lng,
+            @RequestParam("rad") Double rad) {
+        GooglePlaceAPIService googlePlaceAPIService = new GooglePlaceAPIService(
+                lat,
+                lng,
+                rad
+        );
+        return googlePlaceAPIService.getAllPointOfInterestsLocation();
     }
 
 }

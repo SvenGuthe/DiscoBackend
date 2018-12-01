@@ -2,7 +2,7 @@ package disco.api.externalapi.googleplace;
 
 import java.util.List;
 
-public class GooglePlaceRestaurantGETResponse {
+public class GooglePlaceGETResponse {
 
     private String name;
     private Double lat;
@@ -11,11 +11,11 @@ public class GooglePlaceRestaurantGETResponse {
     private List<String> type;
     private String address;
 
-    public GooglePlaceRestaurantGETResponse() {
+    public GooglePlaceGETResponse() {
 
     }
 
-    public GooglePlaceRestaurantGETResponse(String name, Double lat, Double lng, Float rating, List<String> type, String address) {
+    public GooglePlaceGETResponse(String name, Double lat, Double lng, Float rating, List<String> type, String address) {
         this.name = name;
         this.lat = lat;
         this.lng = lng;

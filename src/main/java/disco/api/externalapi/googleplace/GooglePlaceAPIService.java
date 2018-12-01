@@ -2,10 +2,7 @@ package disco.api.externalapi.googleplace;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
-import com.google.maps.model.LatLng;
-import com.google.maps.model.PlaceType;
-import com.google.maps.model.PlacesSearchResponse;
-import com.google.maps.model.PlacesSearchResult;
+import com.google.maps.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +22,20 @@ public class GooglePlaceAPIService {
         this.rad = rad;
     }
 
-    public List<GooglePlaceRestaurantGETResponse> getAllRestaurantsLocation() {
+    private GeoApiContext getContext(String googleAPIKey) {
+        return new GeoApiContext.Builder()
+                .apiKey(googleAPIKey)
+                .build();
+    }
+
+    private LatLng getLatLng() {
+        return new LatLng(
+                lat,
+                lng
+        );
+    }
+
+    public List<GooglePlaceGETResponse> getAllPointOfInterestsLocation() {
 
         String googleAPIKey = getGoogleAPIKey();
 
@@ -34,17 +44,11 @@ public class GooglePlaceAPIService {
             return null;
         }
 
-        GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey(googleAPIKey)
-                .build();
-
-        LatLng latLng = new LatLng(
-                lat,
-                lng
-        );
+        GeoApiContext context = getContext(googleAPIKey);
+        LatLng latLng = getLatLng();
 
         try {
-            List<PlacesSearchResult> placesSearchResultList = getAllPlaceSearchResults(context, latLng);
+            List<PlacesSearchResult> placesSearchResultList = getAllPlaceSearchResults(context, latLng, RequestType.POINTOFINTEREST);
             return getAllPlaceSearchResultsInFormat(placesSearchResultList);
         } catch (InterruptedException e) {
             logger.warn("Error during fetching results: " + e);
@@ -53,9 +57,31 @@ public class GooglePlaceAPIService {
 
     }
 
-    private List<GooglePlaceRestaurantGETResponse> getAllPlaceSearchResultsInFormat(List<PlacesSearchResult> placesSearchResultList) {
+    public List<GooglePlaceGETResponse> getAllRestaurantsLocation() {
 
-        List<GooglePlaceRestaurantGETResponse> googlePlaceRestaurantGETResponseList = new LinkedList<>();
+        String googleAPIKey = getGoogleAPIKey();
+
+        if(googleAPIKey == null) {
+            logger.warn("There is no Google API Key in the Environment Variables");
+            return null;
+        }
+
+        GeoApiContext context = getContext(googleAPIKey);
+        LatLng latLng = getLatLng();
+
+        try {
+            List<PlacesSearchResult> placesSearchResultList = getAllPlaceSearchResults(context, latLng, RequestType.RESTAURANT);
+            return getAllPlaceSearchResultsInFormat(placesSearchResultList);
+        } catch (InterruptedException e) {
+            logger.warn("Error during fetching results: " + e);
+            return null;
+        }
+
+    }
+
+    private List<GooglePlaceGETResponse> getAllPlaceSearchResultsInFormat(List<PlacesSearchResult> placesSearchResultList) {
+
+        List<GooglePlaceGETResponse> googlePlaceGETResponseList = new LinkedList<>();
         Iterator<PlacesSearchResult> placeIterator = placesSearchResultList.iterator();
 
         while(placeIterator.hasNext()) {
@@ -70,30 +96,70 @@ public class GooglePlaceAPIService {
             List<String> type = new ArrayList<>();
             Collections.addAll(type, placesSearchResult.types);
 
-            GooglePlaceRestaurantGETResponse googlePlaceRestaurantGETResponse = new GooglePlaceRestaurantGETResponse();
-            googlePlaceRestaurantGETResponse.setAddress(address);
-            googlePlaceRestaurantGETResponse.setLat(lat);
-            googlePlaceRestaurantGETResponse.setLng(lng);
-            googlePlaceRestaurantGETResponse.setName(name);
-            googlePlaceRestaurantGETResponse.setRating(rating);
-            googlePlaceRestaurantGETResponse.setType(type);
+            GooglePlaceGETResponse googlePlaceGETResponse = new GooglePlaceGETResponse();
+            googlePlaceGETResponse.setAddress(address);
+            googlePlaceGETResponse.setLat(lat);
+            googlePlaceGETResponse.setLng(lng);
+            googlePlaceGETResponse.setName(name);
+            googlePlaceGETResponse.setRating(rating);
+            googlePlaceGETResponse.setType(type);
 
-            googlePlaceRestaurantGETResponseList.add(googlePlaceRestaurantGETResponse);
+            googlePlaceGETResponseList.add(googlePlaceGETResponse);
 
         }
 
-        return googlePlaceRestaurantGETResponseList;
+        return googlePlaceGETResponseList;
 
     }
 
-    private List<PlacesSearchResult> getAllPlaceSearchResults(GeoApiContext context, LatLng latLng) throws InterruptedException {
+    private PlacesSearchResponse getRestaurantResponse(GeoApiContext context, LatLng latLng) {
+        return PlacesApi
+                .nearbySearchQuery(context, latLng)
+                .keyword("Restaurant")
+                .rankby(RankBy.PROMINENCE)
+                .radius((int) Math.round(rad))
+                .awaitIgnoreError();
+    }
+
+    private PlacesSearchResponse getNextRestaurantResponse(GeoApiContext context, LatLng latLng, String nextPageToken) {
+        return PlacesApi
+                .nearbySearchNextPage(context, nextPageToken)
+                .location(latLng)
+                .keyword("Restaurant")
+                .rankby(RankBy.PROMINENCE)
+                .radius((int) Math.round(rad))
+                .awaitIgnoreError();
+    }
+
+    private PlacesSearchResponse getPointOfInterestResponse(GeoApiContext context, LatLng latLng) {
+        return PlacesApi
+                .nearbySearchQuery(context, latLng)
+                .keyword("Sehenswürdigkeiten")
+                .rankby(RankBy.PROMINENCE)
+                .radius((int) Math.round(rad))
+                .awaitIgnoreError();
+    }
+
+    private PlacesSearchResponse getNextPointOfInterestResponse(GeoApiContext context, LatLng latLng, String nextPageToken) {
+        return PlacesApi
+                .nearbySearchNextPage(context, nextPageToken)
+                .location(latLng)
+                .keyword("Sehenswürdigkeiten")
+                .rankby(RankBy.PROMINENCE)
+                .radius((int) Math.round(rad))
+                .awaitIgnoreError();
+    }
+
+    private List<PlacesSearchResult> getAllPlaceSearchResults(GeoApiContext context, LatLng latLng, RequestType requestType) throws InterruptedException {
         List<PlacesSearchResult> placesSearchResultList = new ArrayList<>();
 
-        PlacesSearchResponse placesSearchResponse = PlacesApi
-                .nearbySearchQuery(context, latLng)
-                .type(PlaceType.RESTAURANT, PlaceType.BAR, PlaceType.CAFE, PlaceType.FOOD)
-                .radius(5000)
-                .awaitIgnoreError();
+        PlacesSearchResponse placesSearchResponse;
+
+        if(requestType == RequestType.RESTAURANT) {
+            placesSearchResponse = getRestaurantResponse(context, latLng);
+        } else {
+            placesSearchResponse = getPointOfInterestResponse(context, latLng);
+        }
 
         Collections.addAll(placesSearchResultList, placesSearchResponse.results);
 
@@ -103,12 +169,12 @@ public class GooglePlaceAPIService {
 
                 Thread.sleep(3000);
 
-                placesSearchResponse = PlacesApi
-                        .nearbySearchNextPage(context, nextPageToken)
-                        .location(latLng)
-                        .type(PlaceType.RESTAURANT, PlaceType.BAR, PlaceType.CAFE, PlaceType.FOOD)
-                        .radius(5000)
-                        .awaitIgnoreError();
+                if(requestType == RequestType.RESTAURANT) {
+                    placesSearchResponse = getNextRestaurantResponse(context, latLng, nextPageToken);
+                } else {
+                    placesSearchResponse = getNextPointOfInterestResponse(context, latLng, nextPageToken);
+                }
+
                 if(placesSearchResponse != null){
                     Collections.addAll(placesSearchResultList, placesSearchResponse.results);
                 }
