@@ -163,6 +163,8 @@ public class GooglePlaceAPIService {
 
         Collections.addAll(placesSearchResultList, placesSearchResponse.results);
 
+        /*
+
         if(placesSearchResponse.nextPageToken != null){
             do {
                 String nextPageToken = placesSearchResponse.nextPageToken;
@@ -180,6 +182,8 @@ public class GooglePlaceAPIService {
                 }
             } while (placesSearchResponse != null && placesSearchResponse.nextPageToken != null);
         }
+
+        */
 
         return placesSearchResultList;
     }
