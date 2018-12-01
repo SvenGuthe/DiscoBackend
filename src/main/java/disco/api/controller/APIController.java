@@ -1,5 +1,7 @@
 package disco.api.controller;
 
+import disco.api.externalapi.googleplace.GooglePlaceAPIService;
+import disco.api.externalapi.googleplace.GooglePlaceRestaurantGETResponse;
 import disco.api.externalapi.instagram.InstagramAPIService;
 import disco.api.externalapi.instagram.InstagramGETResponse;
 import disco.api.externalapi.twitter.TwitterAPIService;
@@ -44,6 +46,19 @@ public class APIController {
                 rad
         );
         return twitterAPIService.getAllTweetsFromLocation();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value ="googleplacerestaurant", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<GooglePlaceRestaurantGETResponse> getGooglePlaceRestaurantResponseList(
+            @RequestParam("lat") Double lat,
+            @RequestParam("lng") Double lng,
+            @RequestParam("rad") Double rad) {
+        GooglePlaceAPIService googlePlaceAPIService = new GooglePlaceAPIService(
+                lat,
+                lng,
+                rad
+        );
+        return googlePlaceAPIService.getAllRestaurantsLocation();
     }
 
 }
