@@ -1,5 +1,6 @@
 package disco.api.controller;
 
+import disco.api.externalapi.googledistance.GoogleDistanceAPIService;
 import disco.api.externalapi.googleplace.GooglePlaceAPIService;
 import disco.api.externalapi.googleplace.GooglePlaceGETResponse;
 import disco.api.externalapi.instagram.InstagramAPIService;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "api")
@@ -71,6 +73,19 @@ public class APIController {
                 rad
         );
         return googlePlaceAPIService.getAllPointOfInterestsLocation();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value ="googledistanceroute", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<Integer, GooglePlaceGETResponse> getGoogleDistanceRoute(
+            @RequestParam("lat") Double lat,
+            @RequestParam("lng") Double lng,
+            @RequestParam("rad") Double rad) {
+        GoogleDistanceAPIService googleDistanceAPIService = new GoogleDistanceAPIService(
+                lat,
+                lng,
+                rad
+        );
+        return googleDistanceAPIService.getRouting();
     }
 
 }

@@ -3,6 +3,7 @@ package disco.api.externalapi.googleplace;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.*;
+import disco.api.externalapi.googlecommons.GoogleCommons;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +38,7 @@ public class GooglePlaceAPIService {
 
     public List<GooglePlaceGETResponse> getAllPointOfInterestsLocation() {
 
-        String googleAPIKey = getGoogleAPIKey();
+        String googleAPIKey = GoogleCommons.getGoogleAPIKey();
 
         if(googleAPIKey == null) {
             logger.warn("There is no Google API Key in the Environment Variables");
@@ -59,7 +60,7 @@ public class GooglePlaceAPIService {
 
     public List<GooglePlaceGETResponse> getAllRestaurantsLocation() {
 
-        String googleAPIKey = getGoogleAPIKey();
+        String googleAPIKey = GoogleCommons.getGoogleAPIKey();
 
         if(googleAPIKey == null) {
             logger.warn("There is no Google API Key in the Environment Variables");
@@ -186,20 +187,6 @@ public class GooglePlaceAPIService {
         */
 
         return placesSearchResultList;
-    }
-
-    private String getGoogleAPIKey() {
-        final String envGoogleAPIKeyKey = "GOOGLE_API_KEY";
-
-        Map<String, String> env = System.getenv();
-
-        if(env.containsKey(envGoogleAPIKeyKey)) {
-            String envGoogleAPIKeyValue = env.get(envGoogleAPIKeyKey);
-            logger.info("The Env-Variable " + envGoogleAPIKeyKey + " = " + envGoogleAPIKeyValue );
-            return envGoogleAPIKeyValue;
-        } else {
-            return null;
-        }
     }
 
 }
