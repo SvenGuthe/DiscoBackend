@@ -3,7 +3,7 @@ package disco.api.externalapi.googleplace;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.*;
-import disco.api.externalapi.googlecommons.GoogleCommons;
+import disco.api.externalapi.commons.GoogleCommons;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
