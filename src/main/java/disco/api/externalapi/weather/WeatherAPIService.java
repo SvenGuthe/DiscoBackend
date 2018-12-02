@@ -89,7 +89,7 @@ public class WeatherAPIService {
     }
 
     private String createURL(String appId){
-        return "https://samples.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lng + "&appid=" + appId;
+        return "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lng + "&appid=" + appId;
     }
 
     private JSONObject getResponseBody(String url){
