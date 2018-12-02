@@ -1,5 +1,6 @@
 package disco.api.controller;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import disco.api.externalapi.googledistance.GoogleDistanceAPIService;
 import disco.api.externalapi.googleplace.GooglePlaceAPIService;
 import disco.api.externalapi.googleplace.GooglePlaceGETResponse;

@@ -9,6 +9,7 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.DistanceMatrixElement;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import disco.api.externalapi.commons.GoogleCommons;
 import disco.api.externalapi.googleplace.GooglePlaceAPIService;
 import disco.api.externalapi.googleplace.GooglePlaceGETResponse;
@@ -101,7 +102,7 @@ public class GoogleDistanceAPIService {
 
     }
 
-    private List<GooglePlaceGETResponse> getAllGooglePlaces(){
+    private List<GooglePlaceGETResponse> getAllGooglePlaces()  {
         GooglePlaceAPIService googlePlaceAPIService = new GooglePlaceAPIService(
                 lat,
                 lng,

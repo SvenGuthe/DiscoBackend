@@ -93,6 +93,21 @@ public class GooglePlaceAPIService {
             String name = placesSearchResult.name;
             Double lat = placesSearchResult.geometry.location.lat;
             Double lng = placesSearchResult.geometry.location.lng;
+
+            String photoURL = "";
+            if(placesSearchResult.photos != null && placesSearchResult.photos.length > 0){
+
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append("https://maps.googleapis.com/maps/api/place/photo?photoreference=");
+                urlBuilder.append(placesSearchResult.photos[0].photoReference);
+                urlBuilder.append("&sensor=false&maxheight=500&maxwidth=500&key=");
+                urlBuilder.append(GoogleCommons.getGoogleAPIKey());
+
+                photoURL = urlBuilder.toString();
+            } else {
+                photoURL = null;
+            }
+
             Float rating = placesSearchResult.rating;
             List<String> type = new ArrayList<>();
             Collections.addAll(type, placesSearchResult.types);
@@ -104,6 +119,7 @@ public class GooglePlaceAPIService {
             googlePlaceGETResponse.setName(name);
             googlePlaceGETResponse.setRating(rating);
             googlePlaceGETResponse.setType(type);
+            googlePlaceGETResponse.setPhotoURL(photoURL);
 
             googlePlaceGETResponseList.add(googlePlaceGETResponse);
 

@@ -1,5 +1,6 @@
 package disco.api.externalapi.googledistance;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import disco.api.externalapi.googleplace.GooglePlaceGETResponse;
 
 import java.util.List;

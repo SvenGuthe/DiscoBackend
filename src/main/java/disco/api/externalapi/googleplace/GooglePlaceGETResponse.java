@@ -10,18 +10,20 @@ public class GooglePlaceGETResponse {
     private Float rating;
     private List<String> type;
     private String address;
+    private String photoURL;
 
     public GooglePlaceGETResponse() {
 
     }
 
-    public GooglePlaceGETResponse(String name, Double lat, Double lng, Float rating, List<String> type, String address) {
+    public GooglePlaceGETResponse(String name, Double lat, Double lng, Float rating, List<String> type, String address, String photoURL) {
         this.name = name;
         this.lat = lat;
         this.lng = lng;
         this.rating = rating;
         this.type = type;
         this.address = address;
+        this.photoURL = photoURL;
     }
 
     public String getName() {
@@ -70,5 +72,13 @@ public class GooglePlaceGETResponse {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 }
