@@ -7,6 +7,8 @@ import disco.api.externalapi.instagram.InstagramAPIService;
 import disco.api.externalapi.instagram.InstagramGETResponse;
 import disco.api.externalapi.twitter.TwitterAPIService;
 import disco.api.externalapi.twitter.TwitterGETResponse;
+import disco.api.externalapi.weather.WeatherAPIService;
+import disco.api.externalapi.weather.WeatherGETResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -86,6 +88,19 @@ public class APIController {
                 rad
         );
         return googleDistanceAPIService.getRouting();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value ="weather", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<WeatherGETResponse> getWeatherForecast(
+            @RequestParam("lat") Double lat,
+            @RequestParam("lng") Double lng,
+            @RequestParam("rad") Double rad) {
+        WeatherAPIService weatherAPIService = new WeatherAPIService(
+                lat,
+                lng,
+                rad
+        );
+        return weatherAPIService.getWeatherForecast();
     }
 
 }

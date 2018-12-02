@@ -9,7 +9,7 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.DistanceMatrixElement;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
-import disco.api.externalapi.googlecommons.GoogleCommons;
+import disco.api.externalapi.commons.GoogleCommons;
 import disco.api.externalapi.googleplace.GooglePlaceAPIService;
 import disco.api.externalapi.googleplace.GooglePlaceGETResponse;
 import org.apache.logging.log4j.LogManager;
