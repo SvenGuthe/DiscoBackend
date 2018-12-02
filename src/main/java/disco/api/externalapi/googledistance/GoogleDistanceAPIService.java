@@ -99,9 +99,9 @@ public class GoogleDistanceAPIService {
 
     private List<GooglePlaceGETResponse> getAllGooglePlaces(){
         GooglePlaceAPIService googlePlaceAPIService = new GooglePlaceAPIService(
-                48.858386309412,
-                2.2945538162266,
-                5000
+                lat,
+                lng,
+                rad
         );
         return googlePlaceAPIService.getAllPointOfInterestsLocation();
     }
