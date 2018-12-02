@@ -76,7 +76,7 @@ public class APIController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value ="googledistanceroute", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<Integer, GooglePlaceGETResponse> getGoogleDistanceRoute(
+    public List<GooglePlaceGETResponse> getGoogleDistanceRoute(
             @RequestParam("lat") Double lat,
             @RequestParam("lng") Double lng,
             @RequestParam("rad") Double rad) {

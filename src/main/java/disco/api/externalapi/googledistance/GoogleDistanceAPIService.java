@@ -17,10 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GoogleDistanceAPIService {
 
@@ -36,7 +33,7 @@ public class GoogleDistanceAPIService {
         this.rad = rad;
     }
 
-    public Map<Integer, GooglePlaceGETResponse> getRouting() {
+    public List<GooglePlaceGETResponse> getRouting() {
 
         String API_KEY = GoogleCommons.getGoogleAPIKey();
         GeoApiContext context = new GeoApiContext.Builder()
@@ -51,8 +48,13 @@ public class GoogleDistanceAPIService {
         Map<Integer, GooglePlaceGETResponse> mapLocationNames = new HashMap<>();
 
         Integer index = 0;
+        Integer maxIndex = 9;
 
-        while (googlePlaceGETResponseIterator.hasNext() && index <= 9){
+        if(googlePlaceGETResponseList.size() < maxIndex){
+            maxIndex = googlePlaceGETResponseList.size();
+        }
+
+        while (googlePlaceGETResponseIterator.hasNext() && index <= maxIndex){
 
             GooglePlaceGETResponse googlePlaceGETResponse = googlePlaceGETResponseIterator.next();
 
@@ -66,7 +68,8 @@ public class GoogleDistanceAPIService {
             double[][] distanceMatrix = getDistanceMatrix(context, mapLocations);
             TspDynamicProgrammingRecursive solver = new TspDynamicProgrammingRecursive(distanceMatrix);
 
-            Map<Integer, GooglePlaceGETResponse> resultMap = new HashMap<>();
+            // Map<Integer, GooglePlaceGETResponse> resultMap = new HashMap<>();
+            List<GooglePlaceGETResponse> resultList = new LinkedList<>();
 
             List<Integer> routing = solver.getTour();
             Iterator<Integer> routingIterator = routing.iterator();
@@ -75,11 +78,12 @@ public class GoogleDistanceAPIService {
 
             while(routingIterator.hasNext()) {
                 Integer mapIndex = routingIterator.next();
-                resultMap.put(stepCount, mapLocationNames.get(mapIndex));
+                // resultMap.put(stepCount, mapLocationNames.get(mapIndex));
+                resultList.add(mapLocationNames.get(mapIndex));
                 stepCount++;
             }
 
-            return resultMap;
+            return resultList;
 
             // Print: 42.0
             //System.out.println("Tour cost: " + solver.getTourCost());

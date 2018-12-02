@@ -1,15 +1,12 @@
 package disco.api.externalapi.googledistance;
 
-import com.google.maps.errors.ApiException;
 import disco.api.externalapi.googleplace.GooglePlaceGETResponse;
 
-import java.io.IOException;
-
-import java.util.Map;
+import java.util.List;
 
 public class GoogleDistanceTestRunner {
 
-    public static void main(String[] args) throws InterruptedException, ApiException, IOException {
+    public static void main(String[] args) {
 
         GoogleDistanceAPIService googleDistanceAPIService = new GoogleDistanceAPIService(
                 48.858386309412,
@@ -17,7 +14,7 @@ public class GoogleDistanceTestRunner {
                 5000
         );
 
-        Map<Integer, GooglePlaceGETResponse> routing = googleDistanceAPIService.getRouting();
+        List<GooglePlaceGETResponse> routing = googleDistanceAPIService.getRouting();
 
         return;
 
